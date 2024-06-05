@@ -1,0 +1,697 @@
+openapi: 3.0.0
+info:
+  title: API NaturVida
+  version: 1.0.0
+  description: Documentación de la API de clientes
+servers:
+  - url: http://localhost:3000
+
+# CLIENTES
+
+paths:
+  /cliente/registrar:
+    post:
+      summary: Registrar un nuevo cliente
+      tags: [cliente-registrar]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dNombre:
+                  type: string
+                  description: Nombre del cliente
+                dDireccion:
+                  type: string
+                  description: Dirección del cliente
+                dTelefono:
+                  type: integer
+                  description: Teléfono del cliente
+                dCorreo:
+                  type: string
+                  description: Correo electrónico del cliente
+      responses:
+        '200':
+          description: Cliente registrado correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de confirmación
+                  product:
+                    type: object
+                    properties:
+                      proCodigo:
+                        type: integer
+                        description: Código del producto
+                      proDescripcion:
+                        type: string
+                        description: Descripción del producto
+                      proValor:
+                        type: number
+                        description: Valor del producto
+                      proCantidad:
+                        type: integer
+                        description: Cantidad del producto
+        '400':
+          description: No se pudo registrar el cliente
+        '500':
+          description: Error en el servidor
+
+  /cliente/listar:
+    get:
+      summary: Listar todos los clientes
+      tags: [cliente-listar]
+      responses:
+        '200':
+          description: Lista de clientes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    dDocumento:
+                      type: integer
+                      description: Documento del cliente
+                    dNombre:
+                      type: string
+                      description: Nombre del cliente
+                    dDireccion:
+                      type: string
+                      description: Dirección del cliente
+                    dTelefono:
+                      type: integer
+                      description: Teléfono del cliente
+                    dCorreo:
+                      type: string
+                      description: Correo electrónico del cliente
+        '400':
+          description: No se encontraron usuarios
+        '500':
+          description: Error en el servidor
+
+  /cliente/actualizar/{dDocumento}:
+    put:
+      summary: Actualizar un cliente existente
+      tags: [cliente-actualizar]
+      parameters:
+        - in: path
+          name: dDocumento
+          schema:
+            type: integer
+          required: true
+          description: Documento del cliente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dNombre:
+                  type: string
+                  description: Nuevo nombre del cliente
+                dDireccion:
+                  type: string
+                  description: Nueva dirección del cliente
+                dTelefono:
+                  type: integer
+                  description: Nuevo teléfono del cliente
+                dCorreo:
+                  type: string
+                  description: Nuevo correo electrónico del cliente
+      responses:
+        '200':
+          description: Cliente actualizado correctamente
+        '400':
+          description: Datos no actualizados
+        '500':
+          description: Error en el servidor
+
+  /cliente/eliminar/{dDocumento}:
+    delete:
+      summary: Eliminar un cliente existente
+      tags: [cliente-eliminar]
+      parameters:
+        - in: path
+          name: dDocumento
+          schema:
+            type: integer
+          required: true
+          description: Documento del cliente
+      responses:
+        '200':
+          description: Cliente eliminado con éxito
+        '400':
+          description: Cliente no eliminado
+        '500':
+          description: Error en el servidor
+
+# PRODUCTOS
+  /productos/registrar:
+    post:
+      summary: Registrar un producto
+      description: Endpoint para registrar un producto.
+      requestBody:
+        description: Información del producto a registrar
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                proDescripcion:
+                  type: string
+                  description: Descripción del producto
+                proValor:
+                  type: number
+                  description: Valor del producto
+                proCantidad:
+                  type: integer
+                  description: Cantidad del producto
+      responses:
+        '200':
+          description: Producto registrado con éxito
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de confirmación
+                  product:
+                    type: object
+                    properties:
+                      proCodigo:
+                        type: integer
+                        description: Código del producto
+                      proDescripcion:
+                        type: string
+                        description: Descripción del producto
+                      proValor:
+                        type: number
+                        description: Valor del producto
+                      proCantidad:
+                        type: integer
+                        description: Cantidad del producto
+        '400':
+          description: No se pudo registrar el producto
+        '500':
+          description: Error en el servidor
+
+  /productos/buscar/{proCodigo}:
+    get:
+      summary: Buscar un producto por código
+      description: Endpoint para buscar un producto por su código.
+      parameters:
+        - in: path
+          name: proCodigo
+          required: true
+          schema:
+            type: integer
+          description: Código del producto
+      responses:
+        '200':
+          description: Producto encontrado correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  proCodigo:
+                    type: integer
+                    description: Código del producto
+                  proDescripcion:
+                    type: string
+                    description: Descripción del producto
+                  proValor:
+                    type: number
+                    description: Valor del producto
+                  proCantidad:
+                    type: integer
+                    description: Cantidad del producto
+        '404':
+          description: Producto no encontrado
+        '500':
+          description: Error en el servidor
+
+  /productos/eliminar/{proCodigo}:
+    delete:
+      summary: Eliminar un producto por código
+      description: Endpoint para eliminar un producto por su código.
+      parameters:
+        - in: path
+          name: proCodigo
+          required: true
+          schema:
+            type: integer
+          description: Código del producto a eliminar
+      responses:
+        '200':
+          description: Producto eliminado correctamente
+        '404':
+          description: Producto no encontrado o no se pudo eliminar
+        '500':
+          description: Error en el servidor
+
+# FACTURAS
+
+  /factura/registrarfac:
+    post:
+      summary: Registrar una factura
+      description: Endpoint para registrar una factura.
+      requestBody:
+        description: Información de la factura a registrar
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                facFecha:
+                  type: string
+                  description: Fecha de la factura
+                facCliente:
+                  type: string
+                  description: Nombre del cliente
+                facValorTotal:
+                  type: number
+                  description: Valor total de la factura
+                facVendedor:
+                  type: string
+                  description: Nombre del vendedor
+      responses:
+        '200':
+          description: Registro de factura exitoso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de confirmación
+        '400':
+          description: Error en el registro de factura
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error
+        '500':
+          description: Error en el servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error del servidor
+
+  /factura/actualizar1/{facNumero}:
+    put:
+      summary: Actualizar una factura
+      description: Endpoint para actualizar una factura.
+      parameters:
+        - in: path
+          name: facNumero
+          required: true
+          schema:
+            type: integer
+          description: Número de la factura a actualizar
+      requestBody:
+        description: Información de la factura a actualizar
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                facFecha:
+                  type: string
+                  description: Fecha de la factura
+                facCliente:
+                  type: string
+                  description: Nombre del cliente
+                facValorTotal:
+                  type: number
+                  description: Valor total de la factura
+                facVendedor:
+                  type: string
+                  description: Nombre del vendedor
+      responses:
+        '200':
+          description: Se actualizó la factura con éxito
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de confirmación
+        '400':
+          description: No se actualizó la factura
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error
+        '500':
+          description: Error en el servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error del servidor
+
+  /listfac/factura:
+    get:
+      summary: Listar información de todas las facturas
+      description: Endpoint para obtener la información de todas las facturas.
+      responses:
+        '200':
+          description: Facturas encontradas correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    factura_id:
+                      type: integer
+                      description: Número de la factura
+                    fecha_factura:
+                      type: string
+                      description: Fecha de la factura
+                    cliente_nombre:
+                      type: string
+                      description: Nombre del cliente
+                    cliente_direccion:
+                      type: string
+                      description: Dirección del cliente
+                    cliente_telefono:
+                      type: string
+                      description: Teléfono del cliente
+                    cliente_correo:
+                      type: string
+                      description: Correo del cliente
+                    producto_nombre:
+                      type: string
+                      description: Nombre del producto
+                    cantidad_producto:
+                      type: integer
+                      description: Cantidad del producto
+                    precio_unitario_producto:
+                      type: number
+                      description: Precio unitario del producto
+                    precio_total_producto:
+                      type: number
+                      description: Precio total del producto
+                    factura_valor_total:
+                      type: number
+                      description: Valor total de la factura
+                    vendedor_id:
+                      type: string
+                      description: ID del vendedor
+                    vendedor_nombre:
+                      type: string
+                      description: Nombre del vendedor
+        '400':
+          description: No se encontraron facturas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error
+        '500':
+          description: Error en el servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error del servidor
+
+
+
+                    # PRODUCTOS DE LA TIENDA
+  /detaproducto/obtener:
+    get:
+      summary: Obtener el detalle de los productos
+      description: Endpoint para obtener el detalle de todos los productos de la tienda.
+      responses:
+        '200':
+          description: Detalles de los productos obtenidos correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    proCodigo:
+                      type: integer
+                      description: Código del producto
+                    proDescripcion:
+                      type: string
+                      description: Descripción del producto
+                    proValor:
+                      type: number
+                      description: Valor del producto
+                    stock:
+                      type: integer
+                      description: Cantidad disponible del producto
+                    unitsSold:
+                      type: integer
+                      description: Unidades vendidas del producto
+        '400':
+          description: No se pueden obtener los detalles de los productos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error
+        '500':
+          description: Error en el servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error del servidor
+
+# CINCO PRODUCTOS MÁS VENDIDOS
+  /productoscinco/cinco:
+    get:
+      summary: Obtener los 5 productos más vendidos
+      description: Endpoint para obtener los 5 productos más vendidos.
+      responses:
+        '200':
+          description: Productos más vendidos obtenidos correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    proDescripcion:
+                      type: string
+                      description: Descripción del producto
+                    cantidad_vendida:
+                      type: integer
+                      description: Cantidad vendida del producto
+        '400':
+          description: Error al obtener los productos
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error
+        '500':
+          description: Error en el servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error del servidor
+
+# VALIDAR USUARIOS Y GENERAR TOKEN
+  /ingreso/login3:
+    post:
+      summary: Iniciar sesión
+      description: Endpoint para que un usuario inicie sesión.
+      requestBody:
+        description: Credenciales de inicio de sesión
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Nombre de usuario
+                password:
+                  type: string
+                  description: Contraseña del usuario
+      responses:
+        '200':
+          description: Inicio de sesión exitoso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: Token de autenticación
+        '401':
+          description: Usuario no encontrado o contraseña incorrecta
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error
+        '500':
+          description: Error en el servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error del servidor
+
+  /ingreso/registro:
+    post:
+      summary: Registrar usuario
+      description: Endpoint para registrar un nuevo usuario.
+      requestBody:
+        description: Datos del nuevo usuario
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Nombre de usuario
+                password:
+                  type: string
+                  description: Contraseña del usuario
+      responses:
+        '201':
+          description: Usuario registrado correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de confirmación
+        '400':
+          description: El usuario ya existe
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error
+        '500':
+          description: Error en el servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error del servidor
+
+            # LISTAR PRODUCTOS VENDIDOS POR VENDEDOR
+  /vendedor/listadovende:
+    get:
+      summary: Listar productos vendidos por vendedor
+      description: Endpoint para listar los productos vendidos por cada vendedor.
+      responses:
+        '200':
+          description: Productos vendidos por vendedor obtenidos correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    Vendedor:
+                      type: string
+                      description: Nombre del vendedor
+                    Producto:
+                      type: string
+                      description: Descripción del producto
+                    Cantidad:
+                      type: integer
+                      description: Cantidad vendida del producto
+        '400':
+          description: Error al listar productos vendidos por el vendedor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error
+        '500':
+          description: Error en el servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Mensaje de error del servidor
